@@ -1,0 +1,211 @@
+Req:
+1.  No input to the RFC
+2.  Output : Header
+             ITEM.
+             
+             But there is no relationship netween the Header and Item.
+             
+Ans: 
+Created HeaderEntitySet
+Created ItemEntitySet
+Created Association with navigation --> but there is no common key.. so i deleted referrencial constrains at association
+
+URL:/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeHdrSet/?$expand=TACCODENAV&$format=json
+
+Output:
+{
+  "d" : {
+    "results" : [
+      {
+        "__metadata" : {
+          "id" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeHdrSet('X')",
+          "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeHdrSet('X')",
+          "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeHdr"
+        },
+        "ScanEditInd" : "X",
+        "TACCODENAV" : {
+          "results" : [
+            {
+              "__metadata" : {
+                "id" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35806410')",
+                "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35806410')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "35806410"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35826910')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35826910')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "35826910"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35827010')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35827010')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "35827010"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35827110')",
+                "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35827110')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "35827110"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35827210')",
+                "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35827210')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "35827210"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35827310')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35827310')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "35827310"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35923410')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('35923410')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "35923410"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91150370')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91150370')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91150370"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91155735')",
+                "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91155735')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91155735"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91155815')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91155815')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91155815"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91155820')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91155820')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91155820"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91155825')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91155825')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91155825"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91157840')",
+                "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91157840')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91157840"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91157975')",
+                "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91157975')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91157975"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158000')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158000')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91158000"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158170')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158170')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91158170"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158240')",
+                "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158240')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91158240"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158830')",
+                "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158830')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91158830"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158835')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158835')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91158835"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158840')",
+                "uri" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158840')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91158840"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://XXX:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158845')",
+                "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158845')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91158845"
+            },
+            {
+              "__metadata" : {
+                "id" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158850')",
+                "uri" : "http://NWGWTGD.RJIL.RIL.COM:8000/sap/opu/odata/sap/Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV/TacCodeItemSet('91158850')",
+                "type" : "Z_FIORI_ZDSM_EDIT_NEW_IMEI_SRV.TacCodeItem"
+              },
+              "TacCode" : "91158850"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+             
