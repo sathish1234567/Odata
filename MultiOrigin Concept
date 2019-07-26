@@ -1,0 +1,31 @@
+OData: Implementing Multiple Origin Composition in SAP
+05:26 Unknown
+Multiple Origin Composition (MOC) is a new and an emerging concept in SAP that describes the ability to collect data from different backend systems, integrate them into a single service and update diverse backend systems, while using the same user. Thus a service can be made available for various system aliases. For instance, you could have two identical systems, one that is located in US and one in Japan and accordingly integrate them. You can also use MOC to CREATE calls and the metadata. At present, CREATE calls cannot be processed in all the configured backend systems, but only in the default system. However, before we jump into the actual implementation of MOC, we need to understand few constraints (limitations) for implementing MOC, which are as follows:
+This feature is only supported in standard mode.
+This feature is applicable only for entity sets with an annotation of addressable=true.
+Implementing this feature generates a different version of the service, if the SAP_Origin field is added.
+MOC implementation In order to implement MOC, follow the below outlined steps: I. Customize your service to support MOC.
+Open the SAP NetWeaver Gateway system and activate the desired service.
+Open the transaction SPRO and click SAP Reference IMG.
+Click SAP NetWeaver > Gateway > OData Channel > Administration > General Settings > Activate and Maintain Services to open Activate and Maintain Services screen to add the system aliases for the appropriate backend systems and then define the desired default system. In order to do so, follow the below sub-steps:
+In the Service Catalog list, click the desired service. The service appears in the ICF Nodes section on the lower left corner of the screen.
+In the ICF Nodes section, click Standard Mode ICF Node.
+In the System Aliases section, click Add System Alias to add the system alias.
+Choose New Entries or select an existing entry and click Copy.
+In the Service Doc. Identifier field, type the ID of the service document, along with an underscore and the 4-digit version number (for example, _0001).
+In the SAP System Alias field, type the appropriate system alias.
+             Note: You need to define only one system as the default.
+Repeat as required to add the desired backend systems.
+Note The default system is used whenever the service is not called as MOC. In case, you have defined more than one default system alias, then the first system is used as the default.   MOC Image 
+II. Test the service.
+In the SAP NetWeaver Gateway system, open the SAP Reference IMG in transaction SPRO and click SAP NetWeaver Gateway > OData Channel Administration > General Settings > Activate and Maintain Services to open the Activate and Maintain Services screen.
+Click the filter icon to search for the desired service.
+Select the desired service and under ICF Nodes, click Call Browser.
+Ensure that the SAP_Origin field is visible in the service’s metadata.
+Parallelization of Multiple Origin Composition When using multiple origin composition, you can find out the minimum number of backend systems and the maximum number of parallel backend calls. For accomplishing this, you have an IMG activity available. To do this, follow the below step:
+In the SAP NetWeaver Gateway system, open the SAP Reference IMG in transaction SPRO and navigate to SAP NetWeaver > Gateway > OData Channel > Composition > Define Parallelization for Multiple Origin Composition.
+You can apply this parallelization of READ_ENTITYSET for several backend systems to get the optimized performance. In the IMG activity, you can set the following configuration parameters:
+The values that you can have for the minimum number of backend systems are:
+0: No parallelization
+n: Parallelization will only be performed from n backend systems onwards
+2.  The maximum number of parallel backend calls is mandatorily based on the current resources of the SAP NetWeaver Gateway hub system. Added to that, you can use the parameter: Maximum Number of Parallel Backend Calls to limit the usage of the current system resources. The default value zero (0) implies that it only depends on current system resources.Performance Improvement In case of serialization, the duration of a READ_ENTITYSET within a hub system is the aggregate of all backend calls. On the contrary, the duration in parallel mode is just the maximum duration of all backend calls, implying a minimal overhead for parallelization. Parallelization and Skiptoken If server paging is realized for any backend data providers, then the OData consumer will only get results up to this backend with skiptoken included. The next call with skiptoken or any other call with skiptoken will not be parallelized, as the result has to be resumed by the backend system that had returned this skiptoken earlier. Changesets Changesets are also supported in the context of MOC. All changeset operations for one backend are collected and sent to this backend through one RFC. Request a DemoIf you would like to request a demo of Innovapptive’s SAP Enterprise Mobile solutions, please click on the link. Alternatively, if you would like to discuss with an Innovapptive solution expert, you can reach out to us by emailing us at sales@innovapptive.com or you can reach a sales representative at (713) 275-1804.
