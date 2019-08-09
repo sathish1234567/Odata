@@ -1,0 +1,18 @@
+ Get RFC destination
+    lo_dp_facade = /iwbep/if_mgw_conv_srv_runtime~get_dp_facade( ).
+    header_params = lo_dp_facade->get_request_header( ).
+    READ TABLE header_params INTO ip_param WITH KEY name = 'x-forwarded-for'.
+    IF sy-subrc EQ 0.
+      er_entity-iv_flag = 'S'.
+      er_entity-ev_ip_address = ip_param-value.
+    ELSE.
+      READ TABLE header_params INTO ip_param WITH KEY name = '~remote_addr'.
+      IF sy-subrc EQ 0.
+        er_entity-iv_flag = 'S'.
+        er_entity-ev_ip_address = ip_param-value.
+      ELSE.
+        er_entity-iv_flag = 'E'.
+        er_entity-ev_ip_address = ' '.
+      ENDIF.
+    ENDIF.
+    lv_destination = /iwbep/cl_sb_gen_dpc_rt_util=>get_rfc_destination( io_dp_facade = lo_dp_facade ).
