@@ -209,3 +209,8 @@ Output:
 }
 
              
+
+
+
+Get Expand Entity: allows only key fields in uri, if you want to send the non key fields use the ?$filter
+sap/opu/odata/sap/Z_REACT_OBND_PROCESS_SRV/MasterHeaderListSet(Delivery=' ',OrderNum=' ')?$expand=MASTERDELVNAV,MASTERORDNAV
