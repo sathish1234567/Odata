@@ -1,0 +1,17 @@
+
+Posting: in json
+{
+  "CohertName":"XXX",
+  "ValidFrm":"2020-01-03T00:00:00",
+  "ValidTo":"9999-01-03T00:00:00",
+  "DelInd":"D",
+  "MessageTxt":"Testing",
+
+  "COHERTUPDNAV":[{"CohertName":"XXX",
+  			 "ItemNo":"000001",
+  			 "Grpng":"TEXT",
+  			 "Fieldname":"REGION",
+  			 "CondOp":"EQ",
+  			 "Value":"EA"
+ 			}]
+}
