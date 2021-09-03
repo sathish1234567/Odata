@@ -1,0 +1,194 @@
+METHOD /iwbep/if_mgw_appl_srv_runtime~create_deep_entity.
+
+  DATA:  lt_return   TYPE TABLE OF bapiret2,
+           lw_return   TYPE bapiret2,
+           lo_container TYPE REF TO /iwbep/if_message_container.
+
+
+  DATA:   lv_flag    TYPE abap_bool VALUE space,
+          lw_lheader TYPE ihttpnvp,
+          json       TYPE string,
+          lo_message TYPE REF TO zcl_fiori_format_message_json.
+
+  CONSTANTS:   lc_e TYPE char01 VALUE 'E',
+               lc_w TYPE char01 VALUE 'W',
+               lc_i TYPE char01 VALUE 'I',
+               lc_s TYPE char01 VALUE 'S'.
+
+  IF  iv_entity_set_name = 'OutboundHeaderSet'.
+    TYPES : BEGIN OF ty_item_list.
+            INCLUDE TYPE zcl_z_react_obnd_pr_01_mpc=>ts_outboundserialnohdr.
+    TYPES : sernrhdrtoitemnav TYPE TABLE OF zcl_z_react_obnd_pr_01_mpc=>ts_outboundserialnoitem
+                                            WITH NON-UNIQUE DEFAULT KEY.
+    TYPES : END OF ty_item_list.
+
+    TYPES  ltt_itm_list TYPE TABLE OF ty_item_list WITH NON-UNIQUE DEFAULT KEY.
+    ltt_itm_list
+    hdr-1
+        |_ 1 2 3
+        |_ 2 3 4
+    hdr-2
+        |_ 1 2 3
+
+    TYPES: BEGIN OF ty_item.
+            INCLUDE TYPE zcl_z_react_obnd_pr_01_mpc=>ts_outboundheader.
+    TYPES :hdrtopostnav TYPE TABLE OF zcl_z_react_obnd_pr_01_mpc=>ts_outboundpost WITH NON-UNIQUE DEFAULT KEY,
+           hdrtosernrhdrnav TYPE ltt_itm_list,
+           hdrtoinvoicenav TYPE TABLE OF zcl_z_react_obnd_pr_01_mpc=>ts_outboundinvoice WITH NON-UNIQUE DEFAULT KEY,
+     END OF ty_item.
+
+    DATA: lw_list TYPE ty_item_list,
+          lw_list_ser TYPE zcl_z_react_obnd_pr_01_mpc=>ts_outboundserialnoitem,
+          lw_hdrpost  TYPE zcl_z_react_obnd_pr_01_mpc=>ts_outboundpost,
+          lw_out      TYPE zcl_z_react_obnd_pr_01_mpc=>ts_outboundinvoice.
+
+    DATA: lw_detail   TYPE ty_item,
+*          ls_detail        TYPE ty_item,
+          it_post_data     TYPE ztt_react_obnd_post,
+          lt_post_data     TYPE zst_react_obnd_post,
+          it_item_list     TYPE ztt_react_obnd_post_itm,
+          lt_item_list     TYPE zst_react_obnd_post_itm,
+          i_ind            TYPE char3,
+          ev_vbeln_vf	     TYPE	vbeln_vf,
+          et_vbeln         TYPE ztt_vbeln_mul,
+          lt_vbeln         TYPE zst_vbeln_mul,
+          it_serial        TYPE ztt_seritem_obnd,
+          lt_serial        TYPE zst_seritem_obnd,
+          lv_berot         TYPE berot.
+
+    FIELD-SYMBOLS: <lfs_serial> TYPE zcl_z_react_obnd_pr_01_mpc=>ts_outboundserialnoitem.
+
+    io_data_provider->read_entry_data( IMPORTING es_data = lw_detail ).
+
+    CLEAR lw_list.
+    LOOP AT lw_detail-hdrtosernrhdrnav INTO lw_list.
+*      lw_item-vbeln = ls_detail-i_deliver.
+      lt_item_list-delqty  = lw_list-delqty.
+      lt_item_list-type    = lw_list-type.
+      lt_item_list-vbelv   = lw_list-vbelv.
+      lt_item_list-pickqty = lw_list-pickqty.
+      lt_item_list-bmeng   = lw_list-pickqty.
+      lt_item_list-posnv   = lw_list-posnv.
+      lt_item_list-del_num = lw_list-del_num.
+      lt_item_list-olfmng  = lw_list-olfmng.
+      lt_item_list-del_itmno = lw_list-del_itmno.
+      lt_item_list-vstel     = lw_list-vstel.
+      lt_item_list-matnr     = lw_list-matnr.
+      lt_item_list-arktx     = lw_list-arktx.
+      lt_item_list-meins     = lw_list-meins.
+      lt_item_list-lgort     = lw_list-lgort.
+      lt_item_list-spe_loekz = lw_list-spe_loekz.
+      lt_item_list-dis_qty   = lw_list-dis_qty.
+      lt_item_list-meins_is  = lw_list-meins_is.
+      lt_item_list-val_type  = lw_list-val_type.
+
+      UNASSIGN <lfs_serial>.
+      CLEAR:lt_serial.
+      LOOP AT lw_list-sernrhdrtoitemnav ASSIGNING <lfs_serial>.
+        <lfs_serial>-vbeln = lw_list-del_num.
+        <lfs_serial>-posnr = lw_list-del_itmno.
+        lt_serial-vbeln = lw_list-del_num.
+        lt_serial-sernr = <lfs_serial>-sernr.
+        lt_serial-posnr = lw_list-del_itmno.
+        APPEND lt_serial TO lt_item_list-et_serialitem.
+        CLEAR lt_serial.
+      ENDLOOP.
+*      lt_item_list-et_serialitem = lw_list-sernrhdrtoitemnav.
+
+      APPEND lt_item_list TO it_item_list .
+      CLEAR lt_item_list.
+    ENDLOOP.
+
+    CLEAR lw_hdrpost.
+    LOOP AT lw_detail-hdrtopostnav INTO lw_hdrpost.
+      lt_post_data-type   = lw_hdrpost-type.
+      lt_post_data-vbelv   = lw_hdrpost-vbelv.
+      lt_post_data-vdatu   = lw_hdrpost-vdatu.
+      lt_post_data-name1   = lw_hdrpost-name1.
+      lt_post_data-delivery = lw_hdrpost-delivery.
+      lt_post_data-i_save   = lw_hdrpost-i_save.
+      lt_post_data-i_fkdat  = lw_hdrpost-i_fkdat.
+      APPEND lt_post_data TO it_post_data.
+      CLEAR lt_post_data.
+    ENDLOOP.
+
+    i_ind = lw_detail-i_ind.
+    lv_berot  = lw_detail-i_berot.
+
+    CALL FUNCTION 'Z_REACT_OUTBOUND_POST'
+      EXPORTING
+        it_post_data = it_post_data
+        it_item_list = it_item_list
+        i_ind        = i_ind
+        i_berot      = lv_berot
+      IMPORTING
+        et_return    = lt_return
+        ev_vbeln_vf  = ev_vbeln_vf
+        et_vbeln     = et_vbeln.
+
+    CLEAR lw_detail-ev_vbeln_vf.
+
+    lw_detail-ev_vbeln_vf = ev_vbeln_vf.
+
+    REFRESH lw_detail-hdrtoinvoicenav.
+    IF et_vbeln[] IS NOT INITIAL.
+      CLEAR :lw_out,lt_vbeln.
+      LOOP AT et_vbeln INTO lt_vbeln.
+        lw_out-vbeln = lt_vbeln-vbeln.
+        APPEND lw_out TO lw_detail-hdrtoinvoicenav.
+        CLEAR lw_out.
+      ENDLOOP.
+    ENDIF.
+
+
+    IF lt_return IS NOT INITIAL.
+      CLEAR: lw_return, lv_flag.
+      LOOP AT lt_return INTO lw_return WHERE type = lc_s
+                                          OR type = lc_i
+                                          OR type = lc_w.
+        lv_flag = abap_true.
+        EXIT.
+      ENDLOOP.
+
+      IF lv_flag IS INITIAL.
+        lo_container = me->mo_context->get_message_container( ).
+        CLEAR lw_return.
+        LOOP AT lt_return INTO lw_return.
+          CALL METHOD lo_container->add_message
+            EXPORTING
+              iv_msg_type   = lw_return-type
+              iv_msg_id     = lw_return-id
+              iv_msg_number = lw_return-number
+              iv_msg_text   = lw_return-message
+              iv_msg_v1     = lw_return-message_v1
+              iv_msg_v2     = lw_return-message_v2
+              iv_msg_v3     = lw_return-message_v3
+              iv_msg_v4     = lw_return-message_v4.
+        ENDLOOP.
+
+        RAISE EXCEPTION TYPE /iwbep/cx_mgw_busi_exception
+          EXPORTING
+            message_container = lo_container.
+      ELSE.
+        CREATE OBJECT lo_message.
+        CALL METHOD lo_message->message_format
+          EXPORTING
+            im_returnmsg = lt_return
+          IMPORTING
+            ex_json      = json.
+
+        lw_lheader-name = 'sap-message'.
+        lw_lheader-value = json.
+        set_header( is_header = lw_lheader ).
+      ENDIF.
+    ENDIF.
+
+*  er_deep_entity = dref.
+    CALL METHOD me->copy_data_to_ref
+      EXPORTING
+        is_data = lw_detail
+      CHANGING
+        cr_data = er_deep_entity.
+  ENDIF.
+
+ENDMETHOD.
