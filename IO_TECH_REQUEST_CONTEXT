@@ -1,0 +1,64 @@
+Get_entity:
+___________
+
+data: lt_keys       type /iwbep/t_mgw_tech_pairs,
+          ls_key        type /iwbep/s_mgw_tech_pair,
+          
+          
+ " url input captured to the header data.         
+ call method io_tech_request_context->get_converted_keys
+      importing
+        es_key_values = ls_headerdata.
+        
+  " output sending to the er_entity.
+  
+  
+GetEntitySet:
+_____________
+getEntity and getEntityset navigation path is "TOITEMS' --> first getentity() will trigger and second getentityset will trigger.
+
+data: lt_nav_path   type /iwbep/t_mgw_tech_navi,
+          ls_nav_path   type /iwbep/s_mgw_tech_navi,
+          lt_keys       type /iwbep/t_mgw_tech_pairs,
+          ls_key        type /iwbep/s_mgw_tech_pair.
+
+lt_nav_path = io_tech_request_context->get_navigation_path().
+
+   read table lt_nav_path into ls_nav_path with key nav_prop = 'TOITEMS'.
+
+    if sy-subrc = 0.
+
+      call method io_tech_request_context->get_converted_source_keys
+        importing
+          es_key_values = ls_headerdata.
+
+      ls_so_key = ls_headerdata-salesorder.
+
+      select * from sepm_i_salesorderitem_e
+      into corresponding fields of table @et_entityset
+      where salesorder = @ls_so_key.
+
+    else.
+
+      lv_osql_where_clause = io_tech_request_context->get_osql_where_clause_convert( ).
+
+      select * from sepm_i_salesorderitem_e
+     into corresponding fields of table @et_entityset
+     where (lv_osql_where_clause).
+
+    endif.
+    
+    URL:/sap/opu/odata/SAP/ZE2E100_<XX>_SRV/SalesOrderSet('500000000')/ToItems  --> trigger the SalesOrderSet -- get entity set after salesorder item set will trigger.
+    
+    You will get the items of the sales order 500000000 as a response.
+    
+    where clause.
+    
+    /sap/opu/odata/SAP/ZE2E100_<XX>_SRV/SalesOrderItemSet?$filter=Salesorder eq '500000000'​  <-- is taking data to the where clause.
+    
+    
+    
+    
+
+  
+  
