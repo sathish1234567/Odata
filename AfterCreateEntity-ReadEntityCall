@@ -1,0 +1,40 @@
+DATA lo_tech_read_request_context TYPE REF TO /iwbep/cl_sb_gen_read_aftr_crt.
+DATA ls_key TYPE /iwbep/s_mgw_tech_pair.
+DATA lt_keys TYPE /iwbep/t_mgw_tech_pairs.
+DATA lv_entityset_name TYPE string.
+  FIELD-SYMBOLS: <ls_data> TYPE any.
+  DATA ls_converted_keys LIKE er_entity.
+  
+  
+  CREATE OBJECT lo_tech_read_request_context.
+
+* Create key table for the read operation
+
+  ls_key-name = 'REFNO'.
+  ls_key-value = i_input-refno.
+  IF ls_key IS NOT INITIAL.
+    APPEND ls_key TO lt_keys.
+  ENDIF.
+
+  ls_key-name = 'TKNUM'.
+  ls_key-value = i_input-tknum.
+  IF ls_key IS NOT INITIAL.
+    APPEND ls_key TO lt_keys.
+  ENDIF.
+
+* Set into request context object the key table and the entity set name
+  lo_tech_read_request_context->set_keys( IMPORTING et_keys = lt_keys ).
+  lv_entityset_name = io_tech_request_context->get_entity_set_name( ).
+  lo_tech_read_request_context->set_entityset_name( IMPORTING ev_entityset_name = lv_entityset_name ).
+
+* Call read after create
+  /iwbep/if_mgw_appl_srv_runtime~get_entity(
+    EXPORTING
+      iv_entity_name     = iv_entity_name
+      iv_entity_set_name = iv_entity_set_name
+      iv_source_name     = iv_source_name
+      it_key_tab         = it_key_tab
+      io_tech_request_context = lo_tech_read_request_context
+      it_navigation_path = it_navigation_path
+    IMPORTING
+      er_entity          = ls_entity ).
