@@ -1,0 +1,10 @@
+#	TABLE	Description
+1	CLB2C_GW_SRV	Collaboration: odata service Registry (Customer Table)
+2	CLB2C_GW_SRV_REL	Collaboration: odata service Registry - Related Services
+/IWFND/C_MGDEAM Table Customizing table: Routing for OData Services – ROLEID/SYSTEM ALIAS
+/IWBEP/I_SBO_ET is a standard SAP Table which is used to store SB: OData Entity Type data and is available within R/3 SAP systems depending on the version and release level.
+/IWBEP/I_SBO_ETT – text table
+Note: If the SAP OData Service is not shown, then perform the following steps:
+a.	Go to transaction SE37 and Execute the Function Module “RSEQ_NAT_GENERATION”
+
+
