@@ -1,0 +1,53 @@
+ DATA:ls_entity           TYPE zcl_zxyz_sample_odata_mpc_ext=>ts_orderrheader,
+         ls_order_header_inx TYPE bapisdh1x,
+         lt_return           TYPE TABLE OF bapiret2.
+    DATA lo_message_container TYPE REF TO /iwbep/if_message_container.
+    "Get the Key value - with leading zeros
+    io_tech_request_context->get_converted_keys(
+      IMPORTING
+        es_key_values = ls_entity
+    ).
+
+    "Delete the sales order using BAPI
+    ls_order_header_inx-updateflag = 'D'.
+
+    CALL FUNCTION 'BAPI_SALESORDER_CHANGE'
+      EXPORTING
+        salesdocument    = ls_entity-vbeln
+        order_header_inx = ls_order_header_inx
+      TABLES
+        return           = lt_return.
+
+    READ TABLE lt_return TRANSPORTING NO FIELDS WITH KEY type = 'E'.
+    IF sy-subrc NE 0.
+
+      CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+        EXPORTING
+          wait = abap_true.
+      "Sending a success/information message - to the response header
+      "Step 1- Create a message container object
+      lo_message_container = me->mo_context->get_message_container( ).
+      "Step 2- Fill the message container
+      lo_message_container->add_message_text_only(
+        EXPORTING
+          iv_msg_type               = 'S'
+          iv_msg_text               = 'Sales Order Deleted Successfully'
+          iv_add_to_response_header = abap_true
+      ).
+    ELSE.
+
+      "Send an Error message by raising Exception
+      "Step 1- Create a message container object
+      lo_message_container = me->mo_context->get_message_container( ).
+      "Step 2- Fill the message container
+      lo_message_container->add_messages_from_bapi(
+        EXPORTING
+          it_bapi_messages          = lt_return
+      ).
+      "Step 3- Raise the exception
+      RAISE EXCEPTION TYPE /iwbep/cx_mgw_busi_exception
+        EXPORTING
+          textid            = /iwbep/cx_mgw_busi_exception=>business_error
+          message_container = lo_message_container.
+    ENDIF.
+  ENDMETHOD.
