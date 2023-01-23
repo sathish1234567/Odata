@@ -1,0 +1,174 @@
+io_tech_request_contest usages:
+
+So what we learn from this example is to use IO_TECH_REQUEST_CONTEXT to get the data we want instead of using the deprecated APIs mentioned above. It seems SAP is not putting too much effort into keeping the deprecated APIs 100% correct across new releases of SAP GW – that’s why they are called “deprecated”. However, there are still many standard SAP applications around that are still using the deprecated APIs, and of course, many custom apps that do the same. Even the SAP GW SFLIGHT example from SAP is still using the deprecated APIs (just check line 6 of the first screenshot above, although that might not be the best example).
+
+Here are a few examples of deprecated APIs and what you could use instead:
+
+(Hint: just copy and paste the code above into the corresponding methods play around a little in the debugger. Make sure to compare the values you get with the corresponding deprecated method parameters.)
+
+CREATE_ENTITY:
+
+DATA :
+      lv_entity_type_name     TYPE /iwbep/mgw_tech_name,
+      lv_entity_set_name      TYPE /iwbep/mgw_tech_name,
+      lv_src_entity_type_name TYPE /iwbep/mgw_tech_name,
+      lv_src_entity_set_name  TYPE /iwbep/mgw_tech_name,
+      lt_source_keys          TYPE /iwbep/t_mgw_tech_pairs,
+      lt_navigation_path      TYPE /iwbep/t_mgw_tech_navi.
+
+
+*IV_ENTITY_NAME
+    lv_entity_type_name = io_tech_request_context->get_entity_type_name( ).
+
+*IV_ENTITY_SET_NAME
+    lv_entity_set_name  = io_tech_request_context->get_entity_set_name( ).
+
+*IV_SOURCE_NAME
+    lv_src_entity_set_name  = io_tech_request_context->get_source_entity_set_name( ).
+    lv_src_entity_type_name = io_tech_request_context->get_source_entity_type_name( ).
+
+*IT_NAVIGATION_PATH
+    lt_navigation_path = io_tech_request_context->get_navigation_path( ).
+
+*IT_KEY_TAB
+    lt_source_keys = io_tech_request_context->get_source_keys( ).
+ 
+
+GET_ENTITYSET:
+
+DATA :
+      lv_entity_type_name      TYPE /iwbep/mgw_tech_name,
+      lv_entity_set_name       TYPE /iwbep/mgw_tech_name,
+      lv_src_entity_type_name  TYPE /iwbep/mgw_tech_name,
+      lv_src_entity_set_name   TYPE /iwbep/mgw_tech_name,
+      lt_source_keys           TYPE /iwbep/t_mgw_tech_pairs,
+      lt_filter_select_options TYPE /iwbep/t_mgw_select_option,
+      lt_orderby               TYPE /iwbep/t_mgw_tech_order,
+      lv_top                   TYPE i,
+      lv_skip                  TYPE i,
+      lt_navigation_path       TYPE /iwbep/t_mgw_tech_navi,
+      lv_filter_string         TYPE string,
+      lv_search_string         TYPE string.
+
+
+*IV_ENTITY_NAME
+    lv_entity_type_name = io_tech_request_context->get_entity_type_name( ).
+
+*IV_ENTITY_SET_NAME
+    lv_entity_set_name  = io_tech_request_context->get_entity_set_name( ).
+
+*IV_SOURCE_NAME
+    lv_src_entity_set_name  = io_tech_request_context->get_source_entity_set_name( ).
+    lv_src_entity_type_name = io_tech_request_context->get_source_entity_type_name( ).
+
+*IT_FILTER_SELECT_OPTIONS
+    lt_filter_select_options = io_tech_request_context->get_filter( )->get_filter_select_options( ).
+
+*IT_ORDER
+    lt_orderby = io_tech_request_context->get_orderby( ).
+
+*IS_PAGING
+    lv_top = io_tech_request_context->get_top( ). "why does this API return a string?
+    lv_skip = io_tech_request_context->get_skip( ).
+
+*IT_NAVIGATION_PATH
+    lt_navigation_path = io_tech_request_context->get_navigation_path( ).
+
+*IT_KEY_TAB
+    lt_source_keys = io_tech_request_context->get_source_keys( ).
+
+*IV_FILTER_STRING
+    lv_filter_string = io_tech_request_context->get_filter( )->get_filter_string( ).
+
+*IV_SEARCH_STRING
+    lv_search_string = io_tech_request_context->get_search_string( ).
+ 
+
+GET_ENTITY:
+
+DATA :
+      lv_entity_type_name     TYPE /iwbep/mgw_tech_name,
+      lv_entity_set_name      TYPE /iwbep/mgw_tech_name,
+      lv_src_entity_type_name TYPE /iwbep/mgw_tech_name,
+      lv_src_entity_set_name  TYPE /iwbep/mgw_tech_name,
+      lt_keys                 TYPE /iwbep/t_mgw_tech_pairs,
+      lt_source_keys          TYPE /iwbep/t_mgw_tech_pairs,
+      lt_navigation_path      TYPE /iwbep/t_mgw_tech_navi.
+
+
+*IV_ENTITY_NAME
+    lv_entity_type_name = io_tech_request_context->get_entity_type_name( ).
+
+*IV_ENTITY_SET_NAME
+    lv_entity_set_name  = io_tech_request_context->get_entity_set_name( ).
+
+*IV_SOURCE_NAME
+    lv_src_entity_set_name  = io_tech_request_context->get_source_entity_set_name( ).
+    lv_src_entity_type_name = io_tech_request_context->get_source_entity_type_name( ).
+
+*IT_NAVIGATION_PATH
+    lt_navigation_path = io_tech_request_context->get_navigation_path( ).
+
+*IT_KEY_TAB
+    lt_keys = io_tech_request_context->get_keys( ).
+    lt_source_keys = io_tech_request_context->get_source_keys( ).
+ 
+ 
+
+UPDATE_ENTITY:
+
+DATA :
+      lv_entity_type_name TYPE /iwbep/mgw_tech_name,
+      lv_entity_set_name  TYPE /iwbep/mgw_tech_name,
+      lt_keys             TYPE /iwbep/t_mgw_tech_pairs.
+
+
+*IV_ENTITY_NAME
+    lv_entity_type_name = io_tech_request_context->get_entity_type_name( ).
+
+*IV_ENTITY_SET_NAME
+    lv_entity_set_name  = io_tech_request_context->get_entity_set_name( ).
+
+*IV_SOURCE_NAME
+*     ==> no corresponding API in IO_TECH_REQUEST_CONTEXT (why not???)
+
+*IT_NAVIGATION_PATH
+*     ==> no corresponding API in IO_TECH_REQUEST_CONTEXT (why not???)
+
+*IT_KEY_TAB
+    lt_keys = io_tech_request_context->get_keys( ).
+    "no source keys table available on IO_TECH_REQUEST_CONTEXT (why not???)
+ 
+
+DELETE_ENTITY: 
+
+DATA :
+      lv_entity_type_name TYPE /iwbep/mgw_tech_name,
+      lv_entity_set_name  TYPE /iwbep/mgw_tech_name,
+      lt_keys             TYPE /iwbep/t_mgw_tech_pairs.
+
+
+*IV_ENTITY_NAME
+    lv_entity_type_name = io_tech_request_context->get_entity_type_name( ).
+
+*IV_ENTITY_SET_NAME
+    lv_entity_set_name  = io_tech_request_context->get_entity_set_name( ).
+
+*IV_SOURCE_NAME
+*     ==> no corresponding API in IO_TECH_REQUEST_CONTEXT (why not???)
+
+*IT_NAVIGATION_PATH
+*     ==> no corresponding API in IO_TECH_REQUEST_CONTEXT (why not???)
+
+*IT_KEY_TAB
+    lt_keys = io_tech_request_context->get_keys( ).
+    "no source keys table available on IO_TECH_REQUEST_CONTEXT (why not???)
+ 
+
+ATTENTION:
+
+Make sure to test your code after you have changed your code to rely on io_tech_request_contexs! In some cases things have slightly changed, i.e. in IT_KEY_TAB the key is the Property Name of the entity while the keys in get_keys() and get_source_keys() are equal to the corresponding ABAP field names!!!! Such changes could break your logic in the code.
+
+ 
+
+Unfortunately, I was not able to find some official announcement or documentation about the deprecated APIs. Even the public API docs do not list the deprecated APIs/parameters. Taking into account that the deprecation of APIs took place some years ago it’s very strange not to find any docs (I hope I’m not too stupid to google). I guess this is why we all keep seeing the deprecated APIs every day.
