@@ -7,4 +7,9 @@
 Note: If the SAP OData Service is not shown, then perform the following steps:
 a.	Go to transaction SE37 and Execute the Function Module “RSEQ_NAT_GENERATION”
 
+How to delete the Runtime objects from table(For CLass and Interface)
+1. Delete the Interface and calss from Se24- Permenently 
+2. Delete the Interfcae name and Class Name from the :/IWBEP/I_SBD_GA
+3. Delete it from the TR also... so it is permanently delete.
+
 
