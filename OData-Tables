@@ -1,4 +1,5 @@
 #	TABLE	Description
+0. /iwbep/i_sbd_DS - FM/project/entity type
 1	CLB2C_GW_SRV	Collaboration: odata service Registry (Customer Table)
 2	CLB2C_GW_SRV_REL	Collaboration: odata service Registry - Related Services
 /IWFND/C_MGDEAM Table Customizing table: Routing for OData Services – ROLEID/SYSTEM ALIAS
