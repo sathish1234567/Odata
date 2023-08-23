@@ -5,3 +5,20 @@
 3. check the SMICM with your domain(API) .... is there any error/ or not.. if it is error .. it is showing in red color.
    then drop mail to the basis.. basis will take care about this ....
 
+SM69 -PING -- F8
+For PING from program/FM : SXPG_COMMAND_EXECUTE
+
+CALL FUNCTION 'SXPG_COMMAND_EXECUTE'
+EXPORTING
+   commandname = 'PING'
+   additional_parameters = 'WWW>yahoo.com'
+   operatingsystem = 'ANYOS'
+importing
+   status = lv_Status
+   exitcode = lv_Retcode
+tables 
+   exec_protcol = lt_output.
+
+loop at lt_output.
+   write : lt_output-message.
+endloop.
