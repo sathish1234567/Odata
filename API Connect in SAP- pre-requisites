@@ -1,0 +1,7 @@
+1. Open the port in OS level --> network guys will take care
+2. logon into the SAP system run the tcode : SM69/SM49 -- select the ping --> provide the address --> execute 
+   if you aill get the rc = 2 not sending the request from SAP.  hand shake not yet completed. 
+   else if you will recieves the packets .. it is working....
+3. check the SMICM with your domain(API) .... is there any error/ or not.. if it is error .. it is showing in red color.
+   then drop mail to the basis.. basis will take care about this ....
+
