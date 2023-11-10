@@ -1,0 +1,245 @@
+  METHOD /iwbep/if_mgw_appl_srv_runtime~execute_action.
+
+    TYPES: BEGIN OF ty_bkpf,
+             bukrs TYPE bukrs,
+             belnr TYPE belnr_d,
+             gjahr TYPE gjahr,
+             xblnr TYPE xblnr,
+           END OF ty_bkpf.
+
+    TYPES: BEGIN OF ty_bseg,
+             bukrs TYPE bukrs,
+             belnr TYPE belnr_d,
+             gjahr TYPE gjahr,
+           END OF ty_bseg.
+
+    DATA: lv_belnr     TYPE belnr_d,
+          lv_gjahr     TYPE gjahr,
+          lv_awsys     TYPE logsystem,
+          lv_badi      TYPE REF TO badi_j_1ig_sto,
+          lv_blart     TYPE blart,
+          lv_ktopl     TYPE ktopl,
+          lv_ebeln     TYPE ebeln,
+          lv_vbeln     TYPE vbeln,
+          lv_xblnr     TYPE xblnr,
+          lv_bukrs     TYPE bukrs,
+          lv_rwerks    TYPE werks_d,
+          lv_swerks    TYPE werks_d,
+          lv_cnt       TYPE i,
+          lv_flag      TYPE i,
+          wa_parameter TYPE /iwbep/s_mgw_name_value_pair.
+
+    DATA: lo_message      TYPE REF TO /iwbep/if_message_container,
+          lx_bus_ex       TYPE REF TO /iwbep/cx_mgw_busi_exception,
+          lv_message      TYPE string,
+          lt_return       TYPE TABLE OF bapiret2,
+          wa_return       TYPE bapiret2,
+          header_message  TYPE ihttpnvp,
+          header_document TYPE ihttpnvp.
+
+    DATA: it_bkpf TYPE STANDARD TABLE OF ty_bkpf,
+          it_bseg TYPE STANDARD TABLE OF ty_bseg.
+
+
+    IF iv_action_name = 'createInvoice'.
+
+      IF it_parameter IS NOT INITIAL.
+
+        CLEAR : lv_belnr ,
+                lv_gjahr ,
+                lv_awsys ,
+                lv_blart ,
+                lv_ktopl ,
+                lv_ebeln ,
+                lv_vbeln ,
+                lv_xblnr ,
+                lv_bukrs ,
+                lv_rwerks,
+                lv_swerks,
+                lv_cnt  ,
+                lv_flag .
+
+
+
+        READ TABLE it_parameter INTO wa_parameter WITH KEY name = 'BillingDocument'.
+        lv_vbeln = wa_parameter-value.
+        CLEAR wa_parameter.
+
+        READ TABLE it_parameter INTO wa_parameter WITH KEY name = 'CompanyCode'.
+        lv_bukrs = wa_parameter-value.
+        CLEAR wa_parameter.
+
+        READ TABLE it_parameter INTO wa_parameter WITH KEY name = 'PurchasingDocument'.
+        lv_ebeln = wa_parameter-value.
+        CLEAR wa_parameter.
+
+        READ TABLE it_parameter INTO wa_parameter WITH KEY name = 'ReceivingPlant'.
+        lv_rwerks = wa_parameter-value.
+        CLEAR wa_parameter.
+
+        READ TABLE it_parameter INTO wa_parameter WITH KEY name = 'SupplyingPlant'.
+        lv_swerks = wa_parameter-value.
+        CLEAR wa_parameter.
+
+        READ TABLE it_parameter INTO wa_parameter WITH KEY name = 'DocumentReferenceID'.
+        lv_xblnr = wa_parameter-value.
+        CLEAR wa_parameter.
+
+
+*  Get Document Type
+        SELECT SINGLE blart FROM j_1ig_doctyp_con INTO lv_blart
+                                                    WHERE bukrs = lv_bukrs
+                                                    AND   doc_type = '04'.     " Inb Inv
+        IF lv_blart IS INITIAL.
+          lv_blart = 'RE'.
+        ENDIF.
+
+* Get Fiscal year
+        CALL FUNCTION 'GET_CURRENT_YEAR'
+          EXPORTING
+            bukrs = lv_bukrs
+            date  = sy-datum
+          IMPORTING
+            curry = lv_gjahr.
+
+* Fill chart of accounts
+        CALL FUNCTION 'FI_CHART_OF_ACCOUNT_DETERMINE'
+          EXPORTING
+            i_bukrs = lv_bukrs
+          IMPORTING
+            e_ktopl = lv_ktopl.
+
+* Fill logical system
+        CALL FUNCTION 'OWN_LOGICAL_SYSTEM_GET'
+          IMPORTING
+            own_logical_system             = lv_awsys
+          EXCEPTIONS
+            own_logical_system_not_defined = 1
+            OTHERS                         = 2.
+        IF sy-subrc <> 0.
+* Implement suitable error handling here
+        ENDIF.
+
+
+        CLEAR: it_bkpf,
+               it_bseg.
+
+        SELECT bukrs belnr gjahr xblnr FROM bkpf INTO CORRESPONDING FIELDS OF TABLE it_bkpf
+                                       WHERE bukrs = lv_bukrs
+                                       AND   blart = lv_blart
+                                       AND   xblnr = lv_xblnr
+                                       AND   awtyp = 'BKPFF'
+                                       AND   stblg = ' '
+                                       AND   stjah = ' '.
+
+        IF it_bkpf IS NOT INITIAL.
+          SELECT COUNT( * ) FROM bseg INTO lv_cnt
+                            FOR ALL ENTRIES IN it_bkpf
+                            WHERE bukrs = it_bkpf-bukrs
+                            AND   belnr = it_bkpf-belnr
+                            AND   gjahr = it_bkpf-gjahr
+                            AND   werks = lv_rwerks.
+
+          IF lv_cnt IS NOT INITIAL.
+            SELECT a~bukrs a~belnr a~gjahr INTO TABLE it_bseg
+                                           FROM bseg AS a
+                                           INNER JOIN bkpf AS b
+                                           ON a~belnr = b~belnr
+                                           WHERE a~bukrs =  lv_bukrs
+                                           AND   a~gjahr =  lv_gjahr
+                                           AND   a~werks NE lv_swerks
+                                           AND   b~blart NE lv_blart
+                                           AND   b~xblnr =  lv_xblnr
+                                           AND   b~awtyp =  'VBRK'
+                                           AND   b~awkey NE lv_vbeln.
+
+            IF it_bseg IS NOT INITIAL.
+              SORT it_bseg BY bukrs belnr gjahr.
+              DELETE ADJACENT DUPLICATES FROM it_bseg COMPARING bukrs belnr gjahr.
+              DESCRIBE TABLE it_bseg LINES lv_flag.
+            ENDIF.
+          ENDIF.
+
+        ENDIF.
+
+        IF lv_cnt = 0
+          OR lv_flag IS NOT INITIAL.
+          DATA: ls_vbrk TYPE vbrk.
+
+          SELECT SINGLE * FROM vbrk INTO ls_vbrk WHERE vbeln = lv_vbeln AND bukrs = lv_bukrs.
+
+          CALL FUNCTION 'J_1IG_INB_INV_CREATE'
+            EXPORTING
+              im_bukrs  = lv_bukrs
+              im_werks  = lv_rwerks
+              im_vbeln  = lv_vbeln
+              im_ktopl  = lv_ktopl
+              im_gjahr  = lv_gjahr
+              im_awsys  = lv_awsys
+              im_swerks = lv_swerks
+              im_ebeln  = lv_ebeln
+              im_xblnr  = lv_xblnr
+              im_badi   = lv_badi
+              im_blart  = lv_blart
+              im_erdat  = ls_vbrk-erdat
+            IMPORTING
+              ex_belnr  = lv_belnr
+            TABLES
+              t_return  = lt_return.
+
+          IF lt_return IS NOT INITIAL.
+            READ TABLE lt_return INTO wa_return INDEX 1.
+            IF wa_return-type = 'S'.
+
+              lv_belnr = wa_return-message_v2+0(10).
+              CONCATENATE TEXT-003 lv_belnr INTO lv_message SEPARATED BY SPACE.
+
+              header_message-name = 'Message'.
+              header_message-value = lv_message.
+              CALL METHOD /iwbep/if_mgw_conv_srv_runtime~set_header
+                EXPORTING
+                  is_header = header_message.
+
+              header_document-name = 'Document'.
+              header_document-value = lv_belnr.
+              CALL METHOD /iwbep/if_mgw_conv_srv_runtime~set_header
+                EXPORTING
+                  is_header = header_document.
+
+
+            ELSEIF ( wa_return-type = 'E' OR wa_return-type = 'A').
+
+              lo_message = mo_context->get_message_container( ).
+              lo_message->add_messages_from_bapi( it_bapi_messages = lt_return ).
+
+              CREATE OBJECT lx_bus_ex
+                EXPORTING
+                  message_container = lo_message.
+              RAISE EXCEPTION lx_bus_ex.
+
+            ENDIF.
+
+          ELSE.
+            header_message-name = 'Message'.
+            header_message-value = TEXT-002.
+            CALL METHOD /iwbep/if_mgw_conv_srv_runtime~set_header
+              EXPORTING
+                is_header = header_message.
+          ENDIF.
+
+        ELSE.
+
+          header_message-name = 'Message'.
+          header_message-value = TEXT-001.
+          CALL METHOD /iwbep/if_mgw_conv_srv_runtime~set_header
+            EXPORTING
+              is_header = header_message.
+
+        ENDIF.
+
+      ENDIF.
+
+
+    ENDIF.
+
+  ENDMETHOD.
