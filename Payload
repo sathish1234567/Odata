@@ -1,4 +1,5 @@
-
+urls with decimal values:
+/sap/opu/odata/sap/Z_test_SRV/DistCheckSet(plant='1100',sloc='3000',SiteId='I-AP-APRR-ENB-B001',Latitude=0.0m,Longitude=17.604431000000m,vendorId='')
 Posting: in json
 {
   "CohertName":"XXX",
