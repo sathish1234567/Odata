@@ -1,0 +1,39 @@
+SAP Gateway: 33 Transactions You Need To Know
+This post summarizes the most important transactions, from clearing caches to failure analysis when using SAP Gateway and Fiori.
+
+Published Jun 17, 2021
+
+Transaction	Description
+/IWBEP/CACHE_CLEANUP	Cleanup of Model Cache
+/IWBEP/ERROR_LOG	SAP GW Backend Error Log
+/IWBEP/OCI_SRV_GEN	OData Srvc. Generator for OSCI
+/IWBEP/REG_SERVICE	Maintain Service
+/IWBEP/SB	SAP Gateway Service Builder
+/IWBEP/SBS	SAP Gateway Service Builder Setup
+/IWFND/APPS_LOG	SAP Gateway Application Log Viewer
+/IWFND/CACHE_CLEANUP	Cleanup of Model Cache
+/IWFND/CLEANUP	Execute Cleanup
+/IWFND/ERROR_LOG	SAP Gateway Error Log
+/IWFND/ERROR_LOG_E2E	SAP Gateway Error Log - E2E
+/IWFND/EXPLORER	Service Explorer
+/IWFND/GW_CLIENT	SAP Gateway Client
+/IWFND/IWF_ACTIVATE	Activate / Deactivate SAP Gateway
+/IWFND/MAINT_SERVICE	Activate and Maintain Services
+/IWFND/MED_ACTIVATE	Activate/Deactivate Metadata Cache
+/IWFND/NOTIF_MONITOR	Notification Monitor
+/IWFND/SERVICE_TEST	Service Explorer
+/IWFND/STATS	SAP Gateway Statistics
+/IWFND/TRACES	SAP Gateway Traces
+/IWFND/V4_ADMIN	SAP Gateway Service Administration
+/UI2/FLC	Fiori Launchpad Checks
+/UI2/FLIA	Fiori Launchpad Intent Analyis
+/UI2/FLP	SAP Fiori Launchpad
+/UI2/FLPD_CONF	Fiori Lpd. Designer (cross-client)
+/UI2/FLPD_CUST	Fiori Lpd. Designer (client-spec.)
+/UI2/INVAL_CACHES	Global Invalidation of UI2 chaches
+/UI2/SEMOBJ	Define Semantic Object - Customer
+/UI2/SEMOBJ_SAP	Define Semantic Object - SAP
+/UI5/THEME_TOOL	UI Theme Tool
+LPD_CUST	Launchpad customizing
+SEGW	SAP Gateway Service Builder
+SICF	HTTP Service Hierarchy Maintenance
